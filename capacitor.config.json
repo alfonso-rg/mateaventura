@@ -1,0 +1,14 @@
+{
+  "appId": "com.mateaventura.app",
+  "appName": "MateVentura",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "android": {
+    "allowMixedContent": true,
+    "captureInput": true,
+    "webContentsDebuggingEnabled": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

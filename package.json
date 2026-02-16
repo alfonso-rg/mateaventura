@@ -1,0 +1,23 @@
+{
+  "name": "mateaventura",
+  "version": "1.0.0",
+  "description": "Un juego educativo interactivo para aprender matemáticas de forma divertida.",
+  "main": "test_memory_logic.js",
+  "scripts": {
+    "build": "cp index.html www/",
+    "sync": "npm run build && npx cap sync",
+    "android": "npm run sync && npx cap open android"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://local_proxy@127.0.0.1:54647/git/alfonso-rg/mateaventura"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@capacitor/android": "^8.1.0",
+    "@capacitor/cli": "^8.1.0",
+    "@capacitor/core": "^8.1.0"
+  }
+}
