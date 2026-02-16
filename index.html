@@ -351,6 +351,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
       <div class="cfg-section">
         <div class="cfg-title">Tamaño del tablero</div>
         <div class="cfg-btns">
+          <button class="cfg-btn" data-size="beginner" onclick="memSetSize('beginner')">🌟 Iniciación (8)</button>
           <button class="cfg-btn" data-size="small" onclick="memSetSize('small')">🎯 Pequeño (12)</button>
           <button class="cfg-btn active" data-size="medium" onclick="memSetSize('medium')">🎲 Mediano (16)</button>
           <button class="cfg-btn" data-size="large" onclick="memSetSize('large')">🎰 Grande (20)</button>
@@ -533,6 +534,7 @@ const translations = {
     normal: '⚡ Normal',
     fast: '🚀 Rápida',
     boardSize: 'Tamaño del tablero',
+    beginner: '🌟 Iniciación (8)',
     small: '🎯 Pequeño (12)',
     mediumSize: '🎲 Mediano (16)',
     large: '🎰 Grande (20)',
@@ -582,6 +584,7 @@ const translations = {
     normal: '⚡ Normal',
     fast: '🚀 Fast',
     boardSize: 'Board size',
+    beginner: '🌟 Beginner (8)',
     small: '🎯 Small (12)',
     mediumSize: '🎲 Medium (16)',
     large: '🎰 Large (20)',
@@ -631,6 +634,7 @@ const translations = {
     normal: '⚡ Normál',
     fast: '🚀 Gyors',
     boardSize: 'Tábla mérete',
+    beginner: '🌟 Kezdő (8)',
     small: '🎯 Kicsi (12)',
     mediumSize: '🎲 Közepes (16)',
     large: '🎰 Nagy (20)',
@@ -739,6 +743,7 @@ function updateLangContent() {
     if (text.includes('Difícil') || text.includes('Hard') || text.includes('Nehéz')) btn.textContent = t('hard');
     if (text.includes('Lenta') || text.includes('Slow') || text.includes('Lassú')) btn.textContent = t('slow');
     if (text.includes('Rápida') || text.includes('Fast') || text.includes('Gyors')) btn.textContent = t('fast');
+    if (text.includes('Iniciación') || text.includes('Beginner') || text.includes('Kezdő')) btn.textContent = t('beginner');
     if (text.includes('Pequeño') || text.includes('Small') || text.includes('Kicsi')) btn.textContent = t('small');
     if (text.includes('Mediano (16)') || text.includes('Medium (16)') || text.includes('Közepes (16)')) btn.textContent = t('mediumSize');
     if (text.includes('Grande (20)') || text.includes('Large (20)') || text.includes('Nagy (20)')) btn.textContent = t('large');
@@ -1089,7 +1094,7 @@ function memStart(){
     memInfoEl.classList.add('playing');
 
     // Generate pairs based on config
-    const pairCount=memConfig.size==='small'?6:memConfig.size==='medium'?8:10;
+    const pairCount=memConfig.size==='beginner'?4:memConfig.size==='small'?6:memConfig.size==='medium'?8:10;
     console.log('[DEBUG] pairCount:', pairCount);
 
     const ranges={
@@ -1119,7 +1124,7 @@ function memStart(){
     memPairsEl.textContent=`0/${memTotal} parejas`;
 
     memGridEl.innerHTML='';
-    const cols=memConfig.size==='small'?4:memConfig.size==='medium'?4:5;
+    const cols=memConfig.size==='beginner'?4:memConfig.size==='small'?4:memConfig.size==='medium'?4:5;
     memGridEl.style.gridTemplateColumns=`repeat(${cols},1fr)`;
 
     console.log('[DEBUG] creating cards:', memCards.length);
