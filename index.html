@@ -105,7 +105,9 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .ast-start:active{transform:scale(.95)}
 
 /* --- MEMORY --- */
-.mem-grid{display:grid;gap:8px;width:100%;max-width:360px}
+.mem-config{width:100%;max-width:400px;margin-bottom:16px;flex-shrink:0}
+.mem-grid{display:none;gap:8px;width:100%;max-width:360px}
+.mem-grid.playing{display:grid}
 .mem-card{
   aspect-ratio:1;border-radius:12px;font-family:'Nunito',sans-serif;font-weight:800;
   display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .3s;
@@ -116,25 +118,32 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .mem-card.face-up{background:var(--card2);color:var(--text)}
 .mem-card.matched{background:#065f46;border-color:var(--green);color:var(--green)}
 .mem-card:active{transform:scale(.94)}
-.mem-info{display:flex;gap:16px;margin-bottom:10px;font-size:.85rem;font-weight:700;color:var(--muted)}
+.mem-info{display:none;gap:16px;margin-bottom:10px;font-size:.85rem;font-weight:700;color:var(--muted)}
+.mem-info.playing{display:flex}
 
 /* --- CHAIN --- */
-.chain-display{text-align:center;margin:12px 0}
+.ch-config{width:100%;max-width:400px;margin-bottom:16px;flex-shrink:0}
+.chain-display{text-align:center;margin:12px 0;display:none}
+.chain-display.playing{display:block}
 .chain-current{font-family:'Lilita One',cursive;font-size:3rem;color:var(--cyan);line-height:1}
 .chain-target{font-size:.9rem;color:var(--muted);font-weight:700;margin-top:4px}
 .chain-target b{color:var(--gold);font-size:1.1rem}
-.chain-ops{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;width:100%;max-width:300px;margin-top:12px}
+.chain-ops{display:none;grid-template-columns:repeat(2,1fr);gap:8px;width:100%;max-width:300px;margin-top:12px}
+.chain-ops.playing{display:grid}
 .chain-op{font-family:'Nunito',sans-serif;font-size:1.1rem;font-weight:800;padding:14px;border:none;border-radius:12px;background:var(--card2);color:var(--text);cursor:pointer;border:2px solid rgba(255,255,255,.08);transition:all .15s}
 .chain-op:active{transform:scale(.93)}
 .chain-op.correct{background:#065f46;border-color:var(--green);color:var(--green)}
 .chain-op.wrong{background:#7f1d1d;border-color:var(--red);color:var(--red)}
 .chain-history{display:flex;flex-wrap:wrap;gap:4px;margin-top:10px;justify-content:center}
 .chain-step{font-size:.7rem;font-weight:700;padding:3px 8px;border-radius:8px;background:rgba(255,255,255,.06);color:var(--muted)}
-.chain-timer{width:100%;max-width:300px;height:6px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:10px;overflow:hidden}
+.chain-timer{width:100%;max-width:300px;height:6px;border-radius:3px;background:rgba(255,255,255,.08);margin-top:10px;overflow:hidden;display:none}
+.chain-timer.playing{display:block}
 .chain-timer-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--green),var(--gold),var(--red));transition:width .3s linear}
 
 /* --- CROSSWORD --- */
-.cw-grid{display:inline-grid;gap:2px}
+.cw-config{width:100%;max-width:400px;margin-bottom:16px;flex-shrink:0}
+.cw-grid{display:none;gap:2px}
+.cw-grid.playing{display:inline-grid}
 .cw-cell{display:flex;align-items:center;justify-content:center;font-family:'Lilita One',cursive;border-radius:7px;transition:all .25s}
 .cw-cell.empty{background:transparent}
 .cw-cell.num{background:#dbeafe;color:#1e293b;border:2px solid #bfdbfe}
@@ -145,14 +154,12 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .cw-cell.inp.ok{animation:none;background:#bbf7d0;border-color:var(--green)}
 .cw-cell.inp.bad{animation:none;background:#fecaca;border-color:var(--red)}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(192,132,252,.2)}50%{box-shadow:0 0 0 5px rgba(192,132,252,.07)}}
-.cw-numpad{display:grid;gap:5px;margin-top:12px;width:100%;max-width:320px}
+.cw-numpad{display:none;gap:5px;margin-top:12px;width:100%;max-width:320px}
+.cw-numpad.playing{display:grid}
 .cw-numpad button{font-family:'Lilita One',cursive;font-size:1.15rem;padding:8px;border:none;border-radius:10px;background:var(--card2);color:var(--text);cursor:pointer;border:2px solid rgba(255,255,255,.06);transition:all .15s}
 .cw-numpad button:active{transform:scale(.92)}
 .cw-numpad .cwdel{background:rgba(248,113,113,.15);color:var(--red)}
 .cw-numpad .cwchk{background:rgba(52,211,153,.15);color:var(--green);font-family:'Nunito',sans-serif;font-weight:800;font-size:.85rem}
-.cw-selectors{display:flex;gap:5px;flex-wrap:wrap;justify-content:center;margin-bottom:8px}
-.cw-sb{font-size:.7rem;font-weight:700;padding:3px 10px;border-radius:10px;border:1.5px solid rgba(255,255,255,.1);background:rgba(255,255,255,.04);color:var(--muted);cursor:pointer;transition:all .2s}
-.cw-sb.on{background:linear-gradient(135deg,var(--accent),var(--accent2));border-color:transparent;color:#fff}
 
 /* --- EQUATION BUILDER --- */
 .eq-target{font-family:'Lilita One',cursive;font-size:1rem;color:var(--muted);text-align:center;margin:8px 0}
@@ -320,8 +327,38 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
     <div class="game-score" id="mem-score">0 movimientos</div>
   </div>
   <div class="game-body">
+    <!-- CONFIG PANEL -->
+    <div class="mem-config" id="mem-config">
+      <div class="cfg-section">
+        <div class="cfg-title">Operaciones</div>
+        <div class="cfg-ops">
+          <button class="cfg-op-btn active" data-op="+" onclick="memToggleOp('+')">+ Suma</button>
+          <button class="cfg-op-btn active" data-op="-" onclick="memToggleOp('-')">− Resta</button>
+          <button class="cfg-op-btn active" data-op="×" onclick="memToggleOp('×')">× Multiplicación</button>
+          <button class="cfg-op-btn" data-op="÷" onclick="memToggleOp('÷')">÷ División</button>
+        </div>
+      </div>
+      <div class="cfg-section">
+        <div class="cfg-title">Tamaño del tablero</div>
+        <div class="cfg-btns">
+          <button class="cfg-btn" data-size="small" onclick="memSetSize('small')">🎯 Pequeño (12)</button>
+          <button class="cfg-btn active" data-size="medium" onclick="memSetSize('medium')">🎲 Mediano (16)</button>
+          <button class="cfg-btn" data-size="large" onclick="memSetSize('large')">🎰 Grande (20)</button>
+        </div>
+      </div>
+      <div class="cfg-section">
+        <div class="cfg-title">Dificultad de números</div>
+        <div class="cfg-btns">
+          <button class="cfg-btn" data-level="facil" onclick="memSetLevel('facil')">😊 Fácil</button>
+          <button class="cfg-btn active" data-level="medio" onclick="memSetLevel('medio')">🤔 Medio</button>
+          <button class="cfg-btn" data-level="dificil" onclick="memSetLevel('dificil')">🔥 Difícil</button>
+        </div>
+      </div>
+    </div>
+    <!-- GAME AREA -->
     <div class="mem-info"><span id="mem-pairs">0/0 parejas</span></div>
     <div class="mem-grid" id="mem-grid"></div>
+    <button class="ast-start" id="mem-start-btn" onclick="memStart()">¡Empezar!</button>
   </div>
 </div>
 
@@ -333,6 +370,34 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
     <div class="game-score" id="ch-score">0⭐</div>
   </div>
   <div class="game-body">
+    <!-- CONFIG PANEL -->
+    <div class="ch-config" id="ch-config">
+      <div class="cfg-section">
+        <div class="cfg-title">Tiempo disponible</div>
+        <div class="cfg-btns">
+          <button class="cfg-btn" data-time="corto" onclick="chSetTime('corto')">⏱️ Corto (15s)</button>
+          <button class="cfg-btn active" data-time="normal" onclick="chSetTime('normal')">⏰ Normal (20s)</button>
+          <button class="cfg-btn" data-time="largo" onclick="chSetTime('largo')">⏳ Largo (30s)</button>
+        </div>
+      </div>
+      <div class="cfg-section">
+        <div class="cfg-title">Dificultad de objetivos</div>
+        <div class="cfg-btns">
+          <button class="cfg-btn" data-level="facil" onclick="chSetLevel('facil')">😊 Fácil</button>
+          <button class="cfg-btn active" data-level="medio" onclick="chSetLevel('medio')">🤔 Medio</button>
+          <button class="cfg-btn" data-level="dificil" onclick="chSetLevel('dificil')">🔥 Difícil</button>
+        </div>
+      </div>
+      <div class="cfg-section">
+        <div class="cfg-title">Operaciones disponibles</div>
+        <div class="cfg-ops">
+          <button class="cfg-op-btn active" data-op="suma" onclick="chToggleOp('suma')">+ Suma</button>
+          <button class="cfg-op-btn active" data-op="resta" onclick="chToggleOp('resta')">− Resta</button>
+          <button class="cfg-op-btn active" data-op="mult" onclick="chToggleOp('mult')">× Multiplicación</button>
+        </div>
+      </div>
+    </div>
+    <!-- GAME AREA -->
     <div class="chain-timer"><div class="chain-timer-fill" id="ch-timer-fill" style="width:100%"></div></div>
     <div class="chain-display">
       <div class="chain-current" id="ch-current">5</div>
@@ -340,6 +405,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
     </div>
     <div class="chain-ops" id="ch-ops"></div>
     <div class="chain-history" id="ch-history"></div>
+    <button class="ast-start" id="ch-start-btn" onclick="chStart()">¡Empezar!</button>
   </div>
 </div>
 
@@ -351,13 +417,33 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
     <div class="game-score" id="cw-score">0⭐</div>
   </div>
   <div class="game-body">
-    <div class="cw-selectors" id="cw-selectors"></div>
+    <!-- CONFIG PANEL -->
+    <div class="cw-config" id="cw-config">
+      <div class="cfg-section">
+        <div class="cfg-title">Dificultad</div>
+        <div class="cfg-btns">
+          <button class="cfg-btn" data-level="facil" onclick="cwSetLevel('facil')">😊 Fácil</button>
+          <button class="cfg-btn active" data-level="medio" onclick="cwSetLevel('medio')">🤔 Medio</button>
+          <button class="cfg-btn" data-level="dificil" onclick="cwSetLevel('dificil')">🔥 Difícil</button>
+        </div>
+      </div>
+      <div class="cfg-section">
+        <div class="cfg-title">Tamaño del crucigrama</div>
+        <div class="cfg-btns">
+          <button class="cfg-btn active" data-size="small" onclick="cwSetSize('small')">📋 Cruz</button>
+          <button class="cfg-btn" data-size="medium" onclick="cwSetSize('medium')">📊 Doble</button>
+          <button class="cfg-btn" data-size="large" onclick="cwSetSize('large')">📈 Grande</button>
+        </div>
+      </div>
+    </div>
+    <!-- GAME AREA -->
     <div class="cw-grid" id="cw-grid"></div>
     <div class="cw-numpad" id="cw-numpad"></div>
     <div style="display:flex;gap:8px;margin-top:8px;padding-bottom:12px">
       <button class="eq-btn eq-hint" onclick="cwHint()">💡 Pista</button>
       <button class="eq-btn eq-check" onclick="cwNew()">🎲 Nuevo</button>
     </div>
+    <button class="ast-start" id="cw-start-btn" onclick="cwStartGame()">¡Empezar!</button>
   </div>
 </div>
 
@@ -571,26 +657,72 @@ function astGameOver(){
    2. MEMORY
    ============================ */
 let memCards=[],memFlipped=[],memMatched=0,memTotal=0,memMoves=0,memLocked=false;
+let memConfig={ops:['+','-','×'],size:'medium',level:'medio'};
+
+function memToggleOp(op){
+  const btn=$('mem-config').querySelector(`.cfg-op-btn[data-op="${op}"]`);
+  if(btn.classList.contains('active')){
+    if(memConfig.ops.length>1){memConfig.ops=memConfig.ops.filter(o=>o!==op);btn.classList.remove('active')}
+  }else{memConfig.ops.push(op);btn.classList.add('active')}
+}
+
+function memSetSize(sz){
+  memConfig.size=sz;
+  $('mem-config').querySelectorAll('.cfg-btn[data-size]').forEach(b=>b.classList.remove('active'));
+  $('mem-config').querySelector(`.cfg-btn[data-size="${sz}"]`).classList.add('active');
+}
+
+function memSetLevel(lv){
+  memConfig.level=lv;
+  $('mem-config').querySelectorAll('.cfg-btn[data-level]').forEach(b=>b.classList.remove('active'));
+  $('mem-config').querySelector(`.cfg-btn[data-level="${lv}"]`).classList.add('active');
+}
 
 function memInit(){
   memMatched=0;memMoves=0;memLocked=false;
-  // Generate pairs: operation ↔ result
+  $('mem-score').textContent='0 movimientos';
+  $('mem-grid').classList.remove('playing');
+  $('mem-grid').innerHTML='';
+  $('mem-info').classList.remove('playing');
+  $('mem-config').style.display='';
+  $('mem-start-btn').style.display='';
+}
+
+function memStart(){
+  $('mem-config').style.display='none';
+  $('mem-start-btn').style.display='none';
+  $('mem-grid').classList.add('playing');
+  $('mem-info').classList.add('playing');
+
+  // Generate pairs based on config
+  const pairCount=memConfig.size==='small'?6:memConfig.size==='medium'?8:10;
+  const ranges={
+    facil:{sum:[1,10],sub:[5,15],mul:[2,5],div:[2,5]},
+    medio:{sum:[1,12],sub:[5,20],mul:[2,9],div:[2,10]},
+    dificil:{sum:[5,25],sub:[10,40],mul:[3,12],div:[3,12]}
+  };
+  const r=ranges[memConfig.level];
+
   const pairs=[];
-  const ops=[['+','+'],['-','-'],['×','×']];
-  for(let i=0;i<6;i++){
-    let a,b,op,opS,ans;
-    const[opC,opD]=ops[R(0,2)];
-    if(opC==='+'){a=R(1,12);b=R(1,12);ans=a+b;op='+'}
-    else if(opC==='-'){a=R(5,20);b=R(1,a-1);ans=a-b;op='-'}
-    else{a=R(2,9);b=R(2,9);ans=a*b;op='×'}
+  for(let i=0;i<pairCount;i++){
+    const op=memConfig.ops[R(0,memConfig.ops.length-1)];
+    let a,b,ans;
+    if(op==='+'){a=R(r.sum[0],r.sum[1]);b=R(r.sum[0],r.sum[1]);ans=a+b}
+    else if(op==='-'){const mx=r.sub[1];a=R(r.sub[0],mx);b=R(r.sub[0],Math.min(a-1,mx));ans=a-b}
+    else if(op==='×'){a=R(r.mul[0],r.mul[1]);b=R(r.mul[0],r.mul[1]);ans=a*b}
+    else{b=R(r.div[0],r.div[1]);const q=R(r.div[0],r.div[1]);a=b*q;ans=q}
     pairs.push({q:`${a} ${op} ${b}`,a:String(ans),id:i});
   }
+
   memTotal=pairs.length;
   memCards=shuffle([...pairs.map(p=>({text:p.q,id:p.id,type:'q'})),...pairs.map(p=>({text:p.a,id:p.id,type:'a'}))]);
   memFlipped=[];
-  $('mem-score').textContent='0 movimientos';$('mem-pairs').textContent=`0/${memTotal} parejas`;
+  $('mem-pairs').textContent=`0/${memTotal} parejas`;
+
   const g=$('mem-grid');g.innerHTML='';
-  g.style.gridTemplateColumns=`repeat(${memCards.length<=12?4:4},1fr)`;
+  const cols=memConfig.size==='small'?4:memConfig.size==='medium'?4:5;
+  g.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+
   memCards.forEach((c,i)=>{
     const d=document.createElement('div');
     d.className='mem-card face-down';d.dataset.idx=i;
@@ -620,11 +752,52 @@ function memFlip(i,el){
    3. CHAIN
    ============================ */
 let chCurrent=0,chTarget=0,chScore=0,chTimeLeft=0,chMaxTime=20000,chInterval=null,chActive=false;
+let chConfig={time:'normal',level:'medio',ops:['suma','resta','mult']};
 
-function chInit(){chScore=0;$('ch-score').textContent='0⭐';chActive=false;chNewRound()}
+function chToggleOp(op){
+  const btn=$('ch-config').querySelector(`.cfg-op-btn[data-op="${op}"]`);
+  if(btn.classList.contains('active')){
+    if(chConfig.ops.length>1){chConfig.ops=chConfig.ops.filter(o=>o!==op);btn.classList.remove('active')}
+  }else{chConfig.ops.push(op);btn.classList.add('active')}
+}
+
+function chSetTime(tm){
+  chConfig.time=tm;
+  $('ch-config').querySelectorAll('.cfg-btn[data-time]').forEach(b=>b.classList.remove('active'));
+  $('ch-config').querySelector(`.cfg-btn[data-time="${tm}"]`).classList.add('active');
+}
+
+function chSetLevel(lv){
+  chConfig.level=lv;
+  $('ch-config').querySelectorAll('.cfg-btn[data-level]').forEach(b=>b.classList.remove('active'));
+  $('ch-config').querySelector(`.cfg-btn[data-level="${lv}"]`).classList.add('active');
+}
+
+function chInit(){
+  chScore=0;$('ch-score').textContent='0⭐';chActive=false;
+  $('ch-config').style.display='';
+  $('ch-start-btn').style.display='';
+  document.querySelector('.chain-timer').classList.remove('playing');
+  $('ch-ops').classList.remove('playing');
+  document.querySelector('.chain-display').classList.remove('playing');
+  $('ch-history').innerHTML='';
+}
+
+function chStart(){
+  $('ch-config').style.display='none';
+  $('ch-start-btn').style.display='none';
+  document.querySelector('.chain-timer').classList.add('playing');
+  $('ch-ops').classList.add('playing');
+  document.querySelector('.chain-display').classList.add('playing');
+  chMaxTime=chConfig.time==='corto'?15000:chConfig.time==='normal'?20000:30000;
+  chNewRound();
+}
 
 function chNewRound(){
-  chCurrent=R(1,10);chTarget=R(chCurrent+5,chCurrent+25);
+  const ranges={facil:{start:[1,5],diff:[5,15]},medio:{start:[1,10],diff:[10,25]},dificil:{start:[5,20],diff:[20,50]}};
+  const r=ranges[chConfig.level];
+  chCurrent=R(r.start[0],r.start[1]);
+  chTarget=R(chCurrent+r.diff[0],chCurrent+r.diff[1]);
   $('ch-current').textContent=chCurrent;$('ch-target').textContent=chTarget;
   $('ch-history').innerHTML='';chTimeLeft=chMaxTime;
   chRenderOps();chStartTimer();chActive=true;
@@ -645,21 +818,32 @@ function chStop(){chActive=false;if(chInterval){clearInterval(chInterval);chInte
 
 function chRenderOps(){
   const ops=$('ch-ops');ops.innerHTML='';
-  // Generate 4 options, one correct path
   const options=[];
-  // Always include at least one that gets closer
   const diff=chTarget-chCurrent;
-  if(diff>0){
+
+  // Generate options based on enabled operations
+  const canUse={suma:chConfig.ops.includes('suma'),resta:chConfig.ops.includes('resta'),mult:chConfig.ops.includes('mult')};
+
+  // Always include at least one that gets closer
+  if(diff>0 && canUse.suma){
     if(diff<=10)options.push({label:`+ ${diff}`,fn:v=>v+diff});
     else{const step=R(1,Math.min(diff,10));options.push({label:`+ ${step}`,fn:v=>v+step})}
+  }
+  if(canUse.mult){
     const m=R(2,5);if(chCurrent*m<=chTarget+10)options.push({label:`× ${m}`,fn:v=>v*m});
   }
-  // Fill rest with random ops
+
+  // Fill rest with enabled operations
   while(options.length<4){
-    const type=R(0,2);
-    if(type===0){const n=R(1,10);options.push({label:`+ ${n}`,fn:v=>v+n})}
-    else if(type===1){const n=R(1,Math.max(1,chCurrent-1));if(chCurrent-n>=0)options.push({label:`- ${n}`,fn:v=>v-n})}
-    else{const n=R(2,5);options.push({label:`× ${n}`,fn:v=>v*n})}
+    const availTypes=[];
+    if(canUse.suma)availTypes.push('suma');
+    if(canUse.resta)availTypes.push('resta');
+    if(canUse.mult)availTypes.push('mult');
+    const type=availTypes[R(0,availTypes.length-1)];
+
+    if(type==='suma'){const n=R(1,10);options.push({label:`+ ${n}`,fn:v=>v+n})}
+    else if(type==='resta'){const n=R(1,Math.max(1,chCurrent-1));if(chCurrent-n>=0)options.push({label:`- ${n}`,fn:v=>v-n})}
+    else if(type==='mult'){const n=R(2,5);options.push({label:`× ${n}`,fn:v=>v*n})}
   }
   shuffle(options).slice(0,4).forEach(op=>{
     const b=document.createElement('button');b.className='chain-op';b.textContent=op.label;
@@ -686,24 +870,34 @@ function chRenderOps(){
 /* ============================
    4. CROSSWORD (from previous)
    ============================ */
-let cwPuzzle=null,cwSel=null,cwLevel='facil',cwSize='small',cwScore=0;
+let cwPuzzle=null,cwSel=null,cwLevel='medio',cwSize='small',cwScore=0;
+
+function cwSetLevel(lv){
+  cwLevel=lv;
+  $('cw-config').querySelectorAll('.cfg-btn[data-level]').forEach(b=>b.classList.remove('active'));
+  $('cw-config').querySelector(`.cfg-btn[data-level="${lv}"]`).classList.add('active');
+}
+
+function cwSetSize(sz){
+  cwSize=sz;
+  $('cw-config').querySelectorAll('.cfg-btn[data-size]').forEach(b=>b.classList.remove('active'));
+  $('cw-config').querySelector(`.cfg-btn[data-size="${sz}"]`).classList.add('active');
+}
 
 function cwInit(){
   cwScore=0;$('cw-score').textContent='0⭐';
-  // Render selectors
-  const sel=$('cw-selectors');sel.innerHTML='';
-  [['facil','Fácil'],['medio','Medio'],['dificil','Difícil']].forEach(([k,l])=>{
-    const b=document.createElement('button');b.className='cw-sb'+(cwLevel===k?' on':'');b.textContent=l;
-    b.onclick=()=>{cwLevel=k;sel.querySelectorAll('.cw-sb').forEach((x,i)=>x.classList.toggle('on',i<3?[0,1,2][[...sel.children].indexOf(x)]===(['facil','medio','dificil'].indexOf(k)):false));
-      sel.querySelectorAll('.cw-sb').forEach(x=>x.classList.remove('on'));b.classList.add('on');cwNew()};
-    sel.appendChild(b);
-  });
-  const sp=document.createElement('span');sp.textContent=' ';sp.style.width='8px';sel.appendChild(sp);
-  [['small','Cruz'],['medium','Doble'],['large','Grande']].forEach(([k,l])=>{
-    const b=document.createElement('button');b.className='cw-sb'+(cwSize===k?' on':'');b.textContent=l;
-    b.onclick=()=>{cwSize=k;[...sel.children].slice(4).forEach(x=>{if(x.tagName==='BUTTON')x.classList.remove('on')});b.classList.add('on');cwNew()};
-    sel.appendChild(b);
-  });
+  $('cw-config').style.display='';
+  $('cw-start-btn').style.display='';
+  $('cw-grid').classList.remove('playing');
+  $('cw-numpad').classList.remove('playing');
+  cwSel=null;
+}
+
+function cwStartGame(){
+  $('cw-config').style.display='none';
+  $('cw-start-btn').style.display='none';
+  $('cw-grid').classList.add('playing');
+  $('cw-numpad').classList.add('playing');
   cwNew();
 }
 
