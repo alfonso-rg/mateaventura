@@ -559,8 +559,8 @@ function astSetSpeed(sp){
 
 function astInit(){
   astScore=0;astLives=3;
-  // Set initial speed based on config
-  astSpeed=astConfig.speed==='lenta'?5500:astConfig.speed==='normal'?4000:2800;
+  // Set initial speed based on config - más diferencia notable
+  astSpeed=astConfig.speed==='lenta'?6500:astConfig.speed==='normal'?4000:2500;
   $('ast-score').textContent='0';astRenderLives();
   $('ast-field').innerHTML='';$('ast-field').classList.remove('playing');
   $('ast-answers').innerHTML='';
@@ -636,9 +636,9 @@ function astAnswer(v,btn){
   if(v===astCurrent.answer){
     btn.classList.add('correct');
     astCurrent.el.remove();astScore++;$('ast-score').textContent=astScore;
-    // Speed up based on initial speed
-    const minSpeed=astConfig.speed==='lenta'?2500:astConfig.speed==='normal'?1500:1000;
-    if(astSpeed>minSpeed)astSpeed-=100;
+    // Speed up based on initial speed - velocidades mínimas más acordes
+    const minSpeed=astConfig.speed==='lenta'?3000:astConfig.speed==='normal'?1800:1200;
+    if(astSpeed>minSpeed)astSpeed-=120;
     setTimeout(()=>{if(astActive)astNext()},400);
   }else{
     btn.classList.add('wrong');astLives--;astRenderLives();
