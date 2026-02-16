@@ -770,13 +770,52 @@ const R=(a,b)=>Math.floor(Math.random()*(b-a+1))+a;
 const shuffle=a=>{const r=[...a];for(let i=r.length-1;i>0;i--){const j=R(0,i);[r[i],r[j]]=[r[j],r[i]]}return r};
 
 let stars=0, streakG=0;
-try{stars=+(localStorage.getItem('mv_s')||0);streakG=+(localStorage.getItem('mv_k')||0)}catch(e){}
-function addStars(n){stars+=n;streakG++;try{localStorage.setItem('mv_s',stars);localStorage.setItem('mv_k',streakG)}catch(e){}$('hub-stars').textContent=stars;$('hub-streak').textContent=streakG}
-function resetStreak(){streakG=0;try{localStorage.setItem('mv_k',0)}catch(e){}$('hub-streak').textContent=0}
-$('hub-stars').textContent=stars;$('hub-streak').textContent=streakG;
+try{stars=+(localStorage.getItem('mv_s')||0);streakG=+(localStorage.getItem('mv_k')||0)}catch(e){console.error('[ERROR] localStorage access failed:', e)}
+
+function addStars(n){
+  stars+=n;streakG++;
+  try{localStorage.setItem('mv_s',stars);localStorage.setItem('mv_k',streakG)}catch(e){}
+  const hubStars = $('hub-stars');
+  const hubStreak = $('hub-streak');
+  if (hubStars) hubStars.textContent=stars;
+  if (hubStreak) hubStreak.textContent=streakG;
+}
+
+function resetStreak(){
+  streakG=0;
+  try{localStorage.setItem('mv_k',0)}catch(e){}
+  const hubStreak = $('hub-streak');
+  if (hubStreak) hubStreak.textContent=0;
+}
+
+// Initialize hub display
+try {
+  const hubStars = $('hub-stars');
+  const hubStreak = $('hub-streak');
+  if (hubStars) hubStars.textContent=stars;
+  if (hubStreak) hubStreak.textContent=streakG;
+} catch (e) {
+  console.error('[ERROR] Failed to initialize hub display:', e);
+}
 
 // Stars BG
-(function(){const c=$('starbg');for(let i=0;i<50;i++){const s=document.createElement('div');s.className='s';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2.5+.5}px;height:${Math.random()*2.5+.5}px;animation-delay:${Math.random()*4}s;animation-duration:${R(3,6)}s`;c.appendChild(s)}})();
+try {
+  (function(){
+    const c=$('starbg');
+    if (!c) {
+      console.warn('[WARN] starbg element not found');
+      return;
+    }
+    for(let i=0;i<50;i++){
+      const s=document.createElement('div');
+      s.className='s';
+      s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2.5+.5}px;height:${Math.random()*2.5+.5}px;animation-delay:${Math.random()*4}s;animation-duration:${R(3,6)}s`;
+      c.appendChild(s);
+    }
+  })();
+} catch (e) {
+  console.error('[ERROR] Failed to initialize stars background:', e);
+}
 
 // Initialize language
 setLang(currentLang);
