@@ -76,7 +76,20 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .game-body{flex:1;display:flex;flex-direction:column;align-items:center;padding:8px 16px;overflow-y:auto}
 
 /* --- ASTEROIDS --- */
-.asteroid-field{position:relative;width:100%;max-width:400px;height:320px;background:rgba(0,0,0,.3);border-radius:var(--radius);overflow:hidden;border:2px solid rgba(255,255,255,.05);flex-shrink:0}
+.ast-config{width:100%;max-width:400px;margin-bottom:16px;flex-shrink:0}
+.cfg-section{margin-bottom:16px}
+.cfg-title{font-family:'Lilita One',cursive;font-size:.95rem;color:var(--accent);margin-bottom:8px;text-align:center}
+.cfg-ops{display:grid;grid-template-columns:repeat(2,1fr);gap:6px}
+.cfg-op-btn{font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;padding:10px 8px;border:2px solid rgba(255,255,255,.08);border-radius:10px;background:var(--card2);color:var(--muted);cursor:pointer;transition:all .2s}
+.cfg-op-btn.active{background:linear-gradient(135deg,rgba(255,107,157,.2),rgba(192,132,252,.2));border-color:var(--accent);color:var(--text)}
+.cfg-op-btn:active{transform:scale(.95)}
+.cfg-btns{display:flex;gap:6px;justify-content:center}
+.cfg-btn{font-family:'Nunito',sans-serif;font-size:.85rem;font-weight:700;padding:10px 14px;border:2px solid rgba(255,255,255,.08);border-radius:10px;background:var(--card2);color:var(--muted);cursor:pointer;transition:all .2s;flex:1}
+.cfg-btn.active{background:linear-gradient(135deg,rgba(255,107,157,.2),rgba(192,132,252,.2));border-color:var(--accent);color:var(--text)}
+.cfg-btn:active{transform:scale(.95)}
+
+.asteroid-field{position:relative;width:100%;max-width:400px;height:320px;background:rgba(0,0,0,.3);border-radius:var(--radius);overflow:hidden;border:2px solid rgba(255,255,255,.05);flex-shrink:0;display:none}
+.asteroid-field.playing{display:block}
 .asteroid{position:absolute;display:flex;flex-direction:column;align-items:center;animation:fall linear forwards;pointer-events:none}
 .asteroid .rock{font-size:2.2rem;line-height:1}
 .asteroid .prob{font-size:.75rem;font-weight:800;background:rgba(0,0,0,.6);color:#fff;padding:2px 8px;border-radius:8px;white-space:nowrap}
@@ -263,6 +276,35 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
     <div class="game-score"><span class="ast-lives" id="ast-lives"></span> &nbsp;<span id="ast-score">0</span>⭐</div>
   </div>
   <div class="game-body">
+    <!-- CONFIG PANEL -->
+    <div class="ast-config" id="ast-config">
+      <div class="cfg-section">
+        <div class="cfg-title">Operaciones</div>
+        <div class="cfg-ops">
+          <button class="cfg-op-btn active" data-op="+" onclick="astToggleOp('+')">+ Suma</button>
+          <button class="cfg-op-btn active" data-op="-" onclick="astToggleOp('-')">− Resta</button>
+          <button class="cfg-op-btn active" data-op="×" onclick="astToggleOp('×')">× Multiplicación</button>
+          <button class="cfg-op-btn" data-op="÷" onclick="astToggleOp('÷')">÷ División</button>
+        </div>
+      </div>
+      <div class="cfg-section">
+        <div class="cfg-title">Dificultad de números</div>
+        <div class="cfg-btns">
+          <button class="cfg-btn" data-level="facil" onclick="astSetLevel('facil')">😊 Fácil</button>
+          <button class="cfg-btn active" data-level="medio" onclick="astSetLevel('medio')">🤔 Medio</button>
+          <button class="cfg-btn" data-level="dificil" onclick="astSetLevel('dificil')">🔥 Difícil</button>
+        </div>
+      </div>
+      <div class="cfg-section">
+        <div class="cfg-title">Velocidad inicial</div>
+        <div class="cfg-btns">
+          <button class="cfg-btn" data-speed="lenta" onclick="astSetSpeed('lenta')">🐢 Lenta</button>
+          <button class="cfg-btn active" data-speed="normal" onclick="astSetSpeed('normal')">⚡ Normal</button>
+          <button class="cfg-btn" data-speed="rapida" onclick="astSetSpeed('rapida')">🚀 Rápida</button>
+        </div>
+      </div>
+    </div>
+    <!-- GAME AREA -->
     <div class="asteroid-field" id="ast-field"></div>
     <div class="ast-answers" id="ast-answers"></div>
     <div class="ast-msg" id="ast-msg"></div>
@@ -408,24 +450,72 @@ function confetti(){const c=$('confetti');c.innerHTML='';const cols=['#e94560','
    1. ASTEROIDS
    ============================ */
 let astTimer=null,astScore=0,astLives=0,astSpeed=4000,astActive=false,astCurrent=null;
+let astConfig={ops:['+','-','×'],level:'medio',speed:'normal'};
 
-function astInit(){astScore=0;astLives=3;astSpeed=4000;$('ast-score').textContent='0';astRenderLives();$('ast-field').innerHTML='';$('ast-answers').innerHTML='';$('ast-msg').textContent='¡Destruye asteroides resolviendo mates!';$('ast-start-btn').style.display='';astActive=false}
+function astToggleOp(op){
+  const btn=document.querySelector(`.cfg-op-btn[data-op="${op}"]`);
+  if(btn.classList.contains('active')){
+    if(astConfig.ops.length>1){astConfig.ops=astConfig.ops.filter(o=>o!==op);btn.classList.remove('active')}
+  }else{astConfig.ops.push(op);btn.classList.add('active')}
+}
+
+function astSetLevel(lv){
+  astConfig.level=lv;
+  document.querySelectorAll('.cfg-btn[data-level]').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.cfg-btn[data-level="${lv}"]`).classList.add('active');
+}
+
+function astSetSpeed(sp){
+  astConfig.speed=sp;
+  document.querySelectorAll('.cfg-btn[data-speed]').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.cfg-btn[data-speed="${sp}"]`).classList.add('active');
+}
+
+function astInit(){
+  astScore=0;astLives=3;
+  // Set initial speed based on config
+  astSpeed=astConfig.speed==='lenta'?5500:astConfig.speed==='normal'?4000:2800;
+  $('ast-score').textContent='0';astRenderLives();
+  $('ast-field').innerHTML='';$('ast-field').classList.remove('playing');
+  $('ast-answers').innerHTML='';
+  $('ast-msg').textContent='Configura y pulsa ¡Empezar!';
+  $('ast-start-btn').style.display='';
+  $('ast-config').style.display='';
+  astActive=false;
+}
+
 function astRenderLives(){let h='';for(let i=0;i<3;i++)h+=i<astLives?'❤️':'🖤';$('ast-lives').innerHTML=h}
 
 function astStart(){
-  $('ast-start-btn').style.display='none';$('ast-msg').textContent='';astActive=true;astNext();
+  $('ast-start-btn').style.display='none';
+  $('ast-config').style.display='none';
+  $('ast-field').classList.add('playing');
+  $('ast-msg').textContent='';
+  astActive=true;
+  astNext();
 }
-function astStop(){astActive=false;if(astTimer)clearTimeout(astTimer);$('ast-field').innerHTML=''}
+
+function astStop(){astActive=false;if(astTimer)clearTimeout(astTimer);$('ast-field').innerHTML='';$('ast-field').classList.remove('playing')}
 
 function astNext(){
   if(!astActive)return;
-  // Generate problem
-  const ops=['+','-','×'];
-  const op=ops[R(0,2)];
+  // Generate problem based on config
+  const op=astConfig.ops[R(0,astConfig.ops.length-1)];
   let a,b,answer;
-  if(op==='+'){a=R(1,20);b=R(1,20);answer=a+b}
-  else if(op==='-'){a=R(5,30);b=R(1,a-1);answer=a-b}
-  else{a=R(2,9);b=R(2,9);answer=a*b}
+
+  // Difficulty ranges
+  const ranges={
+    facil:{sum:[1,10],sub:[5,15],mul:[2,5],div:[2,5]},
+    medio:{sum:[5,20],sub:[10,30],mul:[2,9],div:[2,10]},
+    dificil:{sum:[10,50],sub:[20,60],mul:[3,12],div:[3,12]}
+  };
+  const r=ranges[astConfig.level];
+
+  if(op==='+'){a=R(r.sum[0],r.sum[1]);b=R(r.sum[0],r.sum[1]);answer=a+b}
+  else if(op==='-'){const mx=r.sub[1];a=R(r.sub[0],mx);b=R(r.sub[0],Math.min(a-1,mx));answer=a-b}
+  else if(op==='×'){a=R(r.mul[0],r.mul[1]);b=R(r.mul[0],r.mul[1]);answer=a*b}
+  else{b=R(r.div[0],r.div[1]);const q=R(r.div[0],r.div[1]);a=b*q;answer=q}
+
   const problem=`${a} ${op} ${b}`;
   astCurrent={answer,el:null};
 
@@ -460,7 +550,9 @@ function astAnswer(v,btn){
   if(v===astCurrent.answer){
     btn.classList.add('correct');
     astCurrent.el.remove();astScore++;$('ast-score').textContent=astScore;
-    if(astSpeed>1500)astSpeed-=100;
+    // Speed up based on initial speed
+    const minSpeed=astConfig.speed==='lenta'?2500:astConfig.speed==='normal'?1500:1000;
+    if(astSpeed>minSpeed)astSpeed-=100;
     setTimeout(()=>{if(astActive)astNext()},400);
   }else{
     btn.classList.add('wrong');astLives--;astRenderLives();
