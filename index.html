@@ -35,9 +35,14 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 .screen.active{display:flex}
 
 /* --- HUB --- */
-.hub-header{text-align:center;padding:24px 16px 8px;flex-shrink:0}
+.hub-header{text-align:center;padding:24px 16px 8px;flex-shrink:0;position:relative}
 .hub-header h1{font-family:'Lilita One',cursive;font-size:2.2rem;background:linear-gradient(135deg,var(--gold),var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;letter-spacing:1px}
 .hub-header .sub{font-size:.85rem;color:var(--muted);margin-top:2px;font-weight:600}
+
+.lang-selector{position:absolute;top:16px;right:16px;display:flex;gap:4px}
+.lang-btn{font-size:1.3rem;width:36px;height:36px;border-radius:10px;border:2px solid rgba(255,255,255,.08);background:var(--card2);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;opacity:.6}
+.lang-btn.active{opacity:1;border-color:var(--accent);background:rgba(255,107,157,.15)}
+.lang-btn:active{transform:scale(.9)}
 
 .hub-stats{display:flex;justify-content:center;gap:20px;padding:8px 16px;flex-shrink:0}
 .hub-stats .st{display:flex;align-items:center;gap:5px;font-size:.85rem;font-weight:700;color:var(--gold)}
@@ -228,12 +233,17 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 <!-- ==================== HUB ==================== -->
 <div class="screen active" id="hub-screen">
   <div class="hub-header">
-    <h1>🚀 MateVentura</h1>
-    <div class="sub">¡Tu aventura matemática espacial!</div>
+    <div class="lang-selector">
+      <button class="lang-btn active" data-lang="es" onclick="setLang('es')" title="Español">🇪🇸</button>
+      <button class="lang-btn" data-lang="hu" onclick="setLang('hu')" title="Magyar">🇭🇺</button>
+      <button class="lang-btn" data-lang="en" onclick="setLang('en')" title="English">🇬🇧</button>
+    </div>
+    <h1 data-i18n="title">🚀 MateVentura</h1>
+    <div class="sub" data-i18n="subtitle">¡Tu aventura matemática espacial!</div>
   </div>
   <div class="hub-stats">
     <div class="st"><span>⭐</span> <span id="hub-stars">0</span></div>
-    <div class="st"><span>🔥</span> <span id="hub-streak">0</span> racha</div>
+    <div class="st"><span>🔥</span> <span id="hub-streak">0</span> <span data-i18n="streak">racha</span></div>
   </div>
   <div class="games-grid">
     <div class="game-card gc1" onclick="openGame('asteroids')">
@@ -501,6 +511,258 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--text);disp
 "use strict";
 
 /* ============================
+   I18N - TRANSLATIONS
+   ============================ */
+const translations = {
+  es: {
+    title: '🚀 MateVentura',
+    subtitle: '¡Tu aventura matemática espacial!',
+    streak: 'racha',
+    start: '¡Empezar!',
+    operations: 'Operaciones',
+    addition: '+ Suma',
+    subtraction: '− Resta',
+    multiplication: '× Multiplicación',
+    division: '÷ División',
+    difficulty: 'Dificultad de números',
+    easy: '😊 Fácil',
+    medium: '🤔 Medio',
+    hard: '🔥 Difícil',
+    speed: 'Velocidad inicial',
+    slow: '🐢 Lenta',
+    normal: '⚡ Normal',
+    fast: '🚀 Rápida',
+    boardSize: 'Tamaño del tablero',
+    small: '🎯 Pequeño (12)',
+    mediumSize: '🎲 Mediano (16)',
+    large: '🎰 Grande (20)',
+    timeAvailable: 'Tiempo disponible',
+    short: '⏱️ Corto (15s)',
+    normalTime: '⏰ Normal (20s)',
+    long: '⏳ Largo (30s)',
+    targetDifficulty: 'Dificultad de objetivos',
+    availableOps: 'Operaciones disponibles',
+    crosswordDiff: 'Dificultad',
+    crosswordSize: 'Tamaño del crucigrama',
+    cross: '📋 Cruz',
+    double: '📊 Doble',
+    big: '📈 Grande',
+    configAndStart: 'Configura y pulsa ¡Empezar!',
+    movements: 'movimientos',
+    pairs: 'parejas',
+    asteroids: 'Asteroides',
+    asteroidsDesc: '¡Destruye asteroides resolviendo operaciones!',
+    memory: 'Memoria',
+    memoryDesc: 'Empareja operaciones con sus resultados',
+    chain: 'Cadena Veloz',
+    chainDesc: 'Encadena operaciones antes de que se acabe el tiempo',
+    crossword: 'Crucigrama',
+    crosswordDesc: 'Rellena la cruz numérica',
+    builder: 'Constructor',
+    builderDesc: 'Construye ecuaciones con las piezas',
+    guess: 'Adivina',
+    guessDesc: 'Adivina el número secreto con pistas'
+  },
+  en: {
+    title: '🚀 MathVenture',
+    subtitle: 'Your space math adventure!',
+    streak: 'streak',
+    start: 'Start!',
+    operations: 'Operations',
+    addition: '+ Addition',
+    subtraction: '− Subtraction',
+    multiplication: '× Multiplication',
+    division: '÷ Division',
+    difficulty: 'Number difficulty',
+    easy: '😊 Easy',
+    medium: '🤔 Medium',
+    hard: '🔥 Hard',
+    speed: 'Initial speed',
+    slow: '🐢 Slow',
+    normal: '⚡ Normal',
+    fast: '🚀 Fast',
+    boardSize: 'Board size',
+    small: '🎯 Small (12)',
+    mediumSize: '🎲 Medium (16)',
+    large: '🎰 Large (20)',
+    timeAvailable: 'Available time',
+    short: '⏱️ Short (15s)',
+    normalTime: '⏰ Normal (20s)',
+    long: '⏳ Long (30s)',
+    targetDifficulty: 'Target difficulty',
+    availableOps: 'Available operations',
+    crosswordDiff: 'Difficulty',
+    crosswordSize: 'Crossword size',
+    cross: '📋 Cross',
+    double: '📊 Double',
+    big: '📈 Large',
+    configAndStart: 'Configure and press Start!',
+    movements: 'moves',
+    pairs: 'pairs',
+    asteroids: 'Asteroids',
+    asteroidsDesc: 'Destroy asteroids by solving operations!',
+    memory: 'Memory',
+    memoryDesc: 'Match operations with their results',
+    chain: 'Fast Chain',
+    chainDesc: 'Chain operations before time runs out',
+    crossword: 'Crossword',
+    crosswordDesc: 'Fill the number cross',
+    builder: 'Builder',
+    builderDesc: 'Build equations with the pieces',
+    guess: 'Guess',
+    guessDesc: 'Guess the secret number with clues'
+  },
+  hu: {
+    title: '🚀 MatekKaland',
+    subtitle: 'Űrbeli matematikai kalandod!',
+    streak: 'sorozat',
+    start: 'Kezdés!',
+    operations: 'Műveletek',
+    addition: '+ Összeadás',
+    subtraction: '− Kivonás',
+    multiplication: '× Szorzás',
+    division: '÷ Osztás',
+    difficulty: 'Számok nehézsége',
+    easy: '😊 Könnyű',
+    medium: '🤔 Közepes',
+    hard: '🔥 Nehéz',
+    speed: 'Kezdő sebesség',
+    slow: '🐢 Lassú',
+    normal: '⚡ Normál',
+    fast: '🚀 Gyors',
+    boardSize: 'Tábla mérete',
+    small: '🎯 Kicsi (12)',
+    mediumSize: '🎲 Közepes (16)',
+    large: '🎰 Nagy (20)',
+    timeAvailable: 'Rendelkezésre álló idő',
+    short: '⏱️ Rövid (15mp)',
+    normalTime: '⏰ Normál (20mp)',
+    long: '⏳ Hosszú (30mp)',
+    targetDifficulty: 'Cél nehézsége',
+    availableOps: 'Elérhető műveletek',
+    crosswordDiff: 'Nehézség',
+    crosswordSize: 'Keresztrejtvény mérete',
+    cross: '📋 Kereszt',
+    double: '📊 Dupla',
+    big: '📈 Nagy',
+    configAndStart: 'Állítsd be és nyomd meg a Kezdés!',
+    movements: 'lépés',
+    pairs: 'pár',
+    asteroids: 'Aszteroidák',
+    asteroidsDesc: 'Pusztítsd el az aszteroidákat műveletek megoldásával!',
+    memory: 'Memória',
+    memoryDesc: 'Párosítsd a műveleteket az eredményekkel',
+    chain: 'Gyors Lánc',
+    chainDesc: 'Láncolj műveleteket, mielőtt lejár az idő',
+    crossword: 'Keresztrejtvény',
+    crosswordDesc: 'Töltsd ki a számos keresztet',
+    builder: 'Építő',
+    builderDesc: 'Építs egyenleteket a darabokból',
+    guess: 'Találd ki',
+    guessDesc: 'Találd ki a titkos számot tippekkel'
+  }
+};
+
+let currentLang = 'es';
+try {
+  const saved = localStorage.getItem('mv_lang');
+  if (saved && translations[saved]) currentLang = saved;
+} catch(e) {}
+
+function t(key) {
+  return translations[currentLang][key] || translations['es'][key] || key;
+}
+
+function setLang(lang) {
+  if (!translations[lang]) return;
+  currentLang = lang;
+  try { localStorage.setItem('mv_lang', lang); } catch(e) {}
+
+  // Update lang buttons
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.lang === lang);
+  });
+
+  // Update all i18n elements
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    el.textContent = t(key);
+  });
+
+  // Update dynamic content
+  updateLangContent();
+}
+
+function updateLangContent() {
+  // Update hub game cards
+  const gameCards = [
+    {name: 'asteroids', desc: 'asteroidsDesc'},
+    {name: 'memory', desc: 'memoryDesc'},
+    {name: 'chain', desc: 'chainDesc'},
+    {name: 'crossword', desc: 'crosswordDesc'},
+    {name: 'builder', desc: 'builderDesc'},
+    {name: 'guess', desc: 'guessDesc'}
+  ];
+
+  document.querySelectorAll('.game-card').forEach((card, i) => {
+    if (i < gameCards.length) {
+      const nameEl = card.querySelector('.name');
+      const descEl = card.querySelector('.desc');
+      if (nameEl) nameEl.textContent = t(gameCards[i].name);
+      if (descEl) descEl.textContent = t(gameCards[i].desc);
+    }
+  });
+
+  // Update config panels
+  document.querySelectorAll('.cfg-title').forEach(el => {
+    const text = el.textContent;
+    if (text.includes('Operaciones') || text.includes('Operations') || text.includes('Műveletek')) el.textContent = t('operations');
+    if (text.includes('Dificultad de números') || text.includes('Number difficulty') || text.includes('Számok nehézsége')) el.textContent = t('difficulty');
+    if (text.includes('Velocidad') || text.includes('speed') || text.includes('sebesség')) el.textContent = t('speed');
+    if (text.includes('Tamaño del tablero') || text.includes('Board size') || text.includes('Tábla mérete')) el.textContent = t('boardSize');
+    if (text.includes('Tiempo') || text.includes('time') || text.includes('idő')) el.textContent = t('timeAvailable');
+    if (text.includes('objetivos') || text.includes('Target') || text.includes('Cél')) el.textContent = t('targetDifficulty');
+    if (text.includes('disponibles') || text.includes('Available') || text.includes('Elérhető')) el.textContent = t('availableOps');
+    if (text.includes('crucigrama') || text.includes('Crossword') || text.includes('Keresztrejtvény')) el.textContent = t('crosswordSize');
+    if (text === 'Dificultad' || text === 'Difficulty' || text === 'Nehézség') el.textContent = t('crosswordDiff');
+  });
+
+  // Update config buttons
+  document.querySelectorAll('.cfg-op-btn, .cfg-btn').forEach(btn => {
+    const text = btn.textContent;
+    if (text.includes('Suma') || text.includes('Addition') || text.includes('Összeadás')) btn.textContent = t('addition');
+    if (text.includes('Resta') || text.includes('Subtraction') || text.includes('Kivonás')) btn.textContent = t('subtraction');
+    if (text.includes('Multiplicación') || text.includes('Multiplication') || text.includes('Szorzás')) btn.textContent = t('multiplication');
+    if (text.includes('División') || text.includes('Division') || text.includes('Osztás')) btn.textContent = t('division');
+    if (text.includes('Fácil') || text.includes('Easy') || text.includes('Könnyű')) btn.textContent = t('easy');
+    if (text.includes('Medio') || text.includes('Medium') || text.includes('Közepes')) btn.textContent = t('medium');
+    if (text.includes('Difícil') || text.includes('Hard') || text.includes('Nehéz')) btn.textContent = t('hard');
+    if (text.includes('Lenta') || text.includes('Slow') || text.includes('Lassú')) btn.textContent = t('slow');
+    if (text.includes('Rápida') || text.includes('Fast') || text.includes('Gyors')) btn.textContent = t('fast');
+    if (text.includes('Pequeño') || text.includes('Small') || text.includes('Kicsi')) btn.textContent = t('small');
+    if (text.includes('Mediano (16)') || text.includes('Medium (16)') || text.includes('Közepes (16)')) btn.textContent = t('mediumSize');
+    if (text.includes('Grande (20)') || text.includes('Large (20)') || text.includes('Nagy (20)')) btn.textContent = t('large');
+    if (text.includes('Corto') || text.includes('Short') || text.includes('Rövid')) btn.textContent = t('short');
+    if (text.includes('Largo') || text.includes('Long') || text.includes('Hosszú')) btn.textContent = t('long');
+    if (text.includes('Cruz') || text.includes('Cross') || text.includes('Kereszt')) btn.textContent = t('cross');
+    if (text.includes('Doble') || text.includes('Double') || text.includes('Dupla')) btn.textContent = t('double');
+    if (text.includes('Grande') && text.includes('📈') || text.includes('Large') && text.includes('📈') || text.includes('Nagy') && text.includes('📈')) btn.textContent = t('big');
+    if (text.includes('Normal') && (text.includes('⚡') || text.includes('⏰'))) {
+      if (text.includes('⚡')) btn.textContent = t('normal');
+      else btn.textContent = t('normalTime');
+    }
+  });
+
+  // Update start buttons
+  document.querySelectorAll('.ast-start').forEach(btn => {
+    btn.textContent = t('start');
+  });
+
+  // Update messages
+  if ($('ast-msg')) $('ast-msg').textContent = t('configAndStart');
+}
+
+/* ============================
    GLOBALS
    ============================ */
 const $=id=>document.getElementById(id);
@@ -515,6 +777,9 @@ $('hub-stars').textContent=stars;$('hub-streak').textContent=streakG;
 
 // Stars BG
 (function(){const c=$('starbg');for(let i=0;i<50;i++){const s=document.createElement('div');s.className='s';s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${Math.random()*2.5+.5}px;height:${Math.random()*2.5+.5}px;animation-delay:${Math.random()*4}s;animation-duration:${R(3,6)}s`;c.appendChild(s)}})();
+
+// Initialize language
+setLang(currentLang);
 
 /* ============================
    NAVIGATION
