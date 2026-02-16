@@ -925,74 +925,129 @@ let memCards=[],memFlipped=[],memMatched=0,memTotal=0,memMoves=0,memLocked=false
 let memConfig={ops:['+','-','×'],size:'medium',level:'medio'};
 
 function memToggleOp(op){
-  const btn=$('mem-config').querySelector(`.cfg-op-btn[data-op="${op}"]`);
-  if(btn.classList.contains('active')){
-    if(memConfig.ops.length>1){memConfig.ops=memConfig.ops.filter(o=>o!==op);btn.classList.remove('active')}
-  }else{memConfig.ops.push(op);btn.classList.add('active')}
+  try {
+    console.log('[DEBUG] memToggleOp called with op:', op);
+    const btn=$('mem-config').querySelector(`.cfg-op-btn[data-op="${op}"]`);
+    if (!btn) {
+      console.error('[ERROR] Button not found for op:', op);
+      return;
+    }
+    if(btn.classList.contains('active')){
+      if(memConfig.ops.length>1){memConfig.ops=memConfig.ops.filter(o=>o!==op);btn.classList.remove('active')}
+    }else{memConfig.ops.push(op);btn.classList.add('active')}
+    console.log('[DEBUG] memConfig.ops after toggle:', memConfig.ops);
+  } catch (error) {
+    console.error('[ERROR] memToggleOp failed:', error);
+  }
 }
 
 function memSetSize(sz){
-  memConfig.size=sz;
-  $('mem-config').querySelectorAll('.cfg-btn[data-size]').forEach(b=>b.classList.remove('active'));
-  $('mem-config').querySelector(`.cfg-btn[data-size="${sz}"]`).classList.add('active');
+  try {
+    console.log('[DEBUG] memSetSize called with sz:', sz);
+    memConfig.size=sz;
+    $('mem-config').querySelectorAll('.cfg-btn[data-size]').forEach(b=>b.classList.remove('active'));
+    const targetBtn = $('mem-config').querySelector(`.cfg-btn[data-size="${sz}"]`);
+    if (!targetBtn) {
+      console.error('[ERROR] Button not found for size:', sz);
+      return;
+    }
+    targetBtn.classList.add('active');
+    console.log('[DEBUG] memConfig.size set to:', memConfig.size);
+  } catch (error) {
+    console.error('[ERROR] memSetSize failed:', error);
+  }
 }
 
 function memSetLevel(lv){
-  memConfig.level=lv;
-  $('mem-config').querySelectorAll('.cfg-btn[data-level]').forEach(b=>b.classList.remove('active'));
-  $('mem-config').querySelector(`.cfg-btn[data-level="${lv}"]`).classList.add('active');
+  try {
+    console.log('[DEBUG] memSetLevel called with lv:', lv);
+    memConfig.level=lv;
+    $('mem-config').querySelectorAll('.cfg-btn[data-level]').forEach(b=>b.classList.remove('active'));
+    const targetBtn = $('mem-config').querySelector(`.cfg-btn[data-level="${lv}"]`);
+    if (!targetBtn) {
+      console.error('[ERROR] Button not found for level:', lv);
+      return;
+    }
+    targetBtn.classList.add('active');
+    console.log('[DEBUG] memConfig.level set to:', memConfig.level);
+  } catch (error) {
+    console.error('[ERROR] memSetLevel failed:', error);
+  }
 }
 
 function memInit(){
-  memMatched=0;memMoves=0;memLocked=false;
-  $('mem-score').textContent='0 movimientos';
-  $('mem-grid').classList.remove('playing');
-  $('mem-grid').innerHTML='';
-  $('mem-info').classList.remove('playing');
-  $('mem-config').style.display='';
-  $('mem-start-btn').style.display='';
+  try {
+    console.log('[DEBUG] memInit called');
+    memMatched=0;memMoves=0;memLocked=false;
+    $('mem-score').textContent='0 movimientos';
+    $('mem-grid').classList.remove('playing');
+    $('mem-grid').innerHTML='';
+    $('mem-info').classList.remove('playing');
+    $('mem-config').style.display='';
+    $('mem-start-btn').style.display='';
+    console.log('[DEBUG] memInit completed, config:', memConfig);
+  } catch (error) {
+    console.error('[ERROR] memInit failed:', error);
+  }
 }
 
 function memStart(){
-  $('mem-config').style.display='none';
-  $('mem-start-btn').style.display='none';
-  $('mem-grid').classList.add('playing');
-  $('mem-info').classList.add('playing');
+  try {
+    console.log('[DEBUG] memStart called', {size: memConfig.size, level: memConfig.level, ops: memConfig.ops});
 
-  // Generate pairs based on config
-  const pairCount=memConfig.size==='small'?6:memConfig.size==='medium'?8:10;
-  const ranges={
-    facil:{sum:[1,10],sub:[5,15],mul:[2,5],div:[2,5]},
-    medio:{sum:[1,12],sub:[5,20],mul:[2,9],div:[2,10]},
-    dificil:{sum:[5,25],sub:[10,40],mul:[3,12],div:[3,12]}
-  };
-  const r=ranges[memConfig.level];
+    $('mem-config').style.display='none';
+    $('mem-start-btn').style.display='none';
+    $('mem-grid').classList.add('playing');
+    $('mem-info').classList.add('playing');
 
-  const pairs=[];
-  for(let i=0;i<pairCount;i++){
-    const op=memConfig.ops[R(0,memConfig.ops.length-1)];
-    let a,b,ans;
-    if(op==='+'){a=R(r.sum[0],r.sum[1]);b=R(r.sum[0],r.sum[1]);ans=a+b}
-    else if(op==='-'){const mx=r.sub[1];a=R(r.sub[0],mx);b=R(r.sub[0],Math.min(a-1,mx));ans=a-b}
-    else if(op==='×'){a=R(r.mul[0],r.mul[1]);b=R(r.mul[0],r.mul[1]);ans=a*b}
-    else{b=R(r.div[0],r.div[1]);const q=R(r.div[0],r.div[1]);a=b*q;ans=q}
-    pairs.push({q:`${a} ${op} ${b}`,a:String(ans),id:i});
+    // Generate pairs based on config
+    const pairCount=memConfig.size==='small'?6:memConfig.size==='medium'?8:10;
+    console.log('[DEBUG] pairCount:', pairCount);
+
+    const ranges={
+      facil:{sum:[1,10],sub:[5,15],mul:[2,5],div:[2,5]},
+      medio:{sum:[1,12],sub:[5,20],mul:[2,9],div:[2,10]},
+      dificil:{sum:[5,25],sub:[10,40],mul:[3,12],div:[3,12]}
+    };
+    const r=ranges[memConfig.level];
+    console.log('[DEBUG] ranges selected:', r);
+
+    const pairs=[];
+    for(let i=0;i<pairCount;i++){
+      const op=memConfig.ops[R(0,memConfig.ops.length-1)];
+      console.log('[DEBUG] generating pair', i, 'with op:', op);
+      let a,b,ans;
+      if(op==='+'){a=R(r.sum[0],r.sum[1]);b=R(r.sum[0],r.sum[1]);ans=a+b}
+      else if(op==='-'){const mx=r.sub[1];a=R(r.sub[0],mx);b=R(r.sub[0],Math.min(a-1,mx));ans=a-b}
+      else if(op==='×'){a=R(r.mul[0],r.mul[1]);b=R(r.mul[0],r.mul[1]);ans=a*b}
+      else{b=R(r.div[0],r.div[1]);const q=R(r.div[0],r.div[1]);a=b*q;ans=q}
+      pairs.push({q:`${a} ${op} ${b}`,a:String(ans),id:i});
+    }
+    console.log('[DEBUG] pairs generated:', pairs.length);
+
+    memTotal=pairs.length;
+    memCards=shuffle([...pairs.map(p=>({text:p.q,id:p.id,type:'q'})),...pairs.map(p=>({text:p.a,id:p.id,type:'a'}))]);
+    memFlipped=[];
+    $('mem-pairs').textContent=`0/${memTotal} parejas`;
+
+    const g=$('mem-grid');g.innerHTML='';
+    const cols=memConfig.size==='small'?4:memConfig.size==='medium'?4:5;
+    g.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+
+    console.log('[DEBUG] creating cards:', memCards.length);
+    memCards.forEach((c,i)=>{
+      const d=document.createElement('div');
+      d.className='mem-card face-down';d.dataset.idx=i;
+      d.addEventListener('click',()=>memFlip(i,d));g.appendChild(d);
+    });
+    console.log('[DEBUG] memStart completed successfully');
+  } catch (error) {
+    console.error('[ERROR] memStart failed:', error);
+    alert('Error en el juego de memoria: ' + error.message);
+    // Restore config view if error occurs
+    $('mem-config').style.display='';
+    $('mem-start-btn').style.display='';
   }
-
-  memTotal=pairs.length;
-  memCards=shuffle([...pairs.map(p=>({text:p.q,id:p.id,type:'q'})),...pairs.map(p=>({text:p.a,id:p.id,type:'a'}))]);
-  memFlipped=[];
-  $('mem-pairs').textContent=`0/${memTotal} parejas`;
-
-  const g=$('mem-grid');g.innerHTML='';
-  const cols=memConfig.size==='small'?4:memConfig.size==='medium'?4:5;
-  g.style.gridTemplateColumns=`repeat(${cols},1fr)`;
-
-  memCards.forEach((c,i)=>{
-    const d=document.createElement('div');
-    d.className='mem-card face-down';d.dataset.idx=i;
-    d.addEventListener('click',()=>memFlip(i,d));g.appendChild(d);
-  });
 }
 
 function memFlip(i,el){
