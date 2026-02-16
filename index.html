@@ -1018,15 +1018,40 @@ function memInit(){
   try {
     console.log('[DEBUG] memInit called');
     memMatched=0;memMoves=0;memLocked=false;
-    $('mem-score').textContent='0 movimientos';
-    $('mem-grid').classList.remove('playing');
-    $('mem-grid').innerHTML='';
-    $('mem-info').classList.remove('playing');
-    $('mem-config').style.display='';
-    $('mem-start-btn').style.display='';
+
+    const memScoreEl = $('mem-score');
+    const memGridEl = $('mem-grid');
+    const memInfoEl = $('mem-info');
+    const memConfigEl = $('mem-config');
+    const memStartBtnEl = $('mem-start-btn');
+
+    console.log('[DEBUG] Elements found:', {
+      memScore: !!memScoreEl,
+      memGrid: !!memGridEl,
+      memInfo: !!memInfoEl,
+      memConfig: !!memConfigEl,
+      memStartBtn: !!memStartBtnEl
+    });
+
+    if (!memScoreEl || !memGridEl || !memInfoEl || !memConfigEl || !memStartBtnEl) {
+      throw new Error('Missing required elements: ' +
+        (!memScoreEl ? 'mem-score ' : '') +
+        (!memGridEl ? 'mem-grid ' : '') +
+        (!memInfoEl ? 'mem-info ' : '') +
+        (!memConfigEl ? 'mem-config ' : '') +
+        (!memStartBtnEl ? 'mem-start-btn ' : ''));
+    }
+
+    memScoreEl.textContent='0 movimientos';
+    memGridEl.classList.remove('playing');
+    memGridEl.innerHTML='';
+    memInfoEl.classList.remove('playing');
+    memConfigEl.style.display='';
+    memStartBtnEl.style.display='';
     console.log('[DEBUG] memInit completed, config:', memConfig);
   } catch (error) {
     console.error('[ERROR] memInit failed:', error);
+    alert('Error al inicializar el juego de memoria: ' + error.message);
   }
 }
 
@@ -1034,10 +1059,34 @@ function memStart(){
   try {
     console.log('[DEBUG] memStart called', {size: memConfig.size, level: memConfig.level, ops: memConfig.ops});
 
-    $('mem-config').style.display='none';
-    $('mem-start-btn').style.display='none';
-    $('mem-grid').classList.add('playing');
-    $('mem-info').classList.add('playing');
+    // Get all DOM elements first and verify they exist
+    const memConfigEl = $('mem-config');
+    const memStartBtnEl = $('mem-start-btn');
+    const memGridEl = $('mem-grid');
+    const memInfoEl = $('mem-info');
+    const memPairsEl = $('mem-pairs');
+
+    console.log('[DEBUG] Elements found:', {
+      memConfig: !!memConfigEl,
+      memStartBtn: !!memStartBtnEl,
+      memGrid: !!memGridEl,
+      memInfo: !!memInfoEl,
+      memPairs: !!memPairsEl
+    });
+
+    if (!memConfigEl || !memStartBtnEl || !memGridEl || !memInfoEl || !memPairsEl) {
+      throw new Error('Missing required elements: ' +
+        (!memConfigEl ? 'mem-config ' : '') +
+        (!memStartBtnEl ? 'mem-start-btn ' : '') +
+        (!memGridEl ? 'mem-grid ' : '') +
+        (!memInfoEl ? 'mem-info ' : '') +
+        (!memPairsEl ? 'mem-pairs ' : ''));
+    }
+
+    memConfigEl.style.display='none';
+    memStartBtnEl.style.display='none';
+    memGridEl.classList.add('playing');
+    memInfoEl.classList.add('playing');
 
     // Generate pairs based on config
     const pairCount=memConfig.size==='small'?6:memConfig.size==='medium'?8:10;
@@ -1067,25 +1116,27 @@ function memStart(){
     memTotal=pairs.length;
     memCards=shuffle([...pairs.map(p=>({text:p.q,id:p.id,type:'q'})),...pairs.map(p=>({text:p.a,id:p.id,type:'a'}))]);
     memFlipped=[];
-    $('mem-pairs').textContent=`0/${memTotal} parejas`;
+    memPairsEl.textContent=`0/${memTotal} parejas`;
 
-    const g=$('mem-grid');g.innerHTML='';
+    memGridEl.innerHTML='';
     const cols=memConfig.size==='small'?4:memConfig.size==='medium'?4:5;
-    g.style.gridTemplateColumns=`repeat(${cols},1fr)`;
+    memGridEl.style.gridTemplateColumns=`repeat(${cols},1fr)`;
 
     console.log('[DEBUG] creating cards:', memCards.length);
     memCards.forEach((c,i)=>{
       const d=document.createElement('div');
       d.className='mem-card face-down';d.dataset.idx=i;
-      d.addEventListener('click',()=>memFlip(i,d));g.appendChild(d);
+      d.addEventListener('click',()=>memFlip(i,d));memGridEl.appendChild(d);
     });
     console.log('[DEBUG] memStart completed successfully');
   } catch (error) {
     console.error('[ERROR] memStart failed:', error);
     alert('Error en el juego de memoria: ' + error.message);
     // Restore config view if error occurs
-    $('mem-config').style.display='';
-    $('mem-start-btn').style.display='';
+    const memConfigEl = $('mem-config');
+    const memStartBtnEl = $('mem-start-btn');
+    if (memConfigEl) memConfigEl.style.display='';
+    if (memStartBtnEl) memStartBtnEl.style.display='';
   }
 }
 
